@@ -110,10 +110,27 @@ Colección Postman lista en [postman/USGS-Earthquake.postman_collection.json](po
 
 ## DAG de Airflow
 
-`hourly_earthquake_report` corre cada hora, lee los eventos de la hora
-anterior y genera/actualiza un documento en `hourly_reports` (upsert por
-`report_date`). Está en `src/airflow/dags/`, montado como volumen en los
-contenedores de Airflow.
+`hourly_earthquake_report` corre cada hora y regenera (upsert) el reporte
+consolidado de las **últimas 2 horas** (no solo la anterior) en
+`hourly_reports`. Se regeneran 2 en vez de 1 porque el feed del USGS a veces
+reporta eventos con algunos minutos de retraso respecto a su `event_time`
+real: un evento de la hora N puede no estar todavía en Mongo cuando se genera
+el reporte de esa hora a las N+1. Al recalcular también N-1 en cada corrida,
+esos eventos tardíos quedan reflejados en la siguiente ejecución sin
+necesitar backfill manual. El DAG está en `src/airflow/dags/`, montado como
+volumen en los contenedores de Airflow (no requiere rebuild de la imagen al
+modificarlo).
+
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Suite de pruebas unitarias (sin Docker/Mongo) sobre la lógica de negocio:
+validadores de dominio, transformación de features del USGS, bucketing de
+magnitud, `top_locations` de reportes y el flujo de deduplicación de ingesta.
 
 ## Supuestos
 
@@ -122,8 +139,6 @@ Sin autenticación/autorización, sin frontend, sin despliegue cloud, sin CI/CD
 
 ## Pendiente / posibles siguientes pasos
 
-- Nivel 2 (Prometheus/Grafana), Nivel 3 (eventos/WebSockets) y Nivel 4
-  (analítica/ML) no están implementados en esta primera iteración; se
-  evaluarán según el tiempo disponible.
-- Tests automatizados (unitarios de `services/` con Mongo en memoria o
-  contenedor efímero).
+Nivel 2 (Prometheus/Grafana), Nivel 3 (eventos/WebSockets) y Nivel 4
+(analítica/ML) — bonificaciones de la sección 8 de la prueba, no
+implementadas en esta entrega para mantener el foco en los requisitos base.
