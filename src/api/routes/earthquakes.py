@@ -2,16 +2,25 @@ import re
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel
 from pymongo.database import Database
 
 from api.dependencies import get_db
 from api.serializers import serialize_document
 from config.constants import EARTHQUAKES_COLLECTION
+from models.earthquake import EarthquakeOut
 
 router = APIRouter(prefix="/earthquakes", tags=["earthquakes"])
 
 
-@router.get("")
+class EarthquakeListResponse(BaseModel):
+    items: list[EarthquakeOut]
+    page: int
+    page_size: int
+    total: int
+
+
+@router.get("", response_model=EarthquakeListResponse)
 def list_earthquakes(
     db: Database = Depends(get_db),
     min_magnitude: float | None = Query(default=None, ge=-2, le=10),

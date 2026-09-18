@@ -12,6 +12,7 @@ class MagnitudeDistribution(BaseModel):
 
 
 class MetricWindow(BaseModel):
+    id: str
     window: str
     earthquake_count: int
     avg_magnitude: float

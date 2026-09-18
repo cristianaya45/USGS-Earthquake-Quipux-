@@ -30,6 +30,10 @@ class EarthquakeCreate(BaseModel):
         return validate_longitude(value)
 
 
+class EarthquakeOut(EarthquakeCreate):
+    id: str
+
+
 def from_usgs_feature(feature: dict) -> EarthquakeCreate:
     properties = feature["properties"]
     coordinates = feature["geometry"]["coordinates"]
