@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.idea/
+.pytest_cache/
+
+# Airflow / Postgres runtime data si se corre algo fuera de Docker
+logs/
+airflow.db
+airflow.cfg
