@@ -84,7 +84,7 @@ sus logs (JSON estructurado) cada ciclo.
 ### Variables de entorno
 
 Ver [.env.example](.env.example). Copiar a `.env` para sobrescribir cualquier
-default antes de levantar los contenedores.
+default.
 
 ### Ejecutar localmente sin Docker
 
@@ -131,14 +131,3 @@ pytest
 Suite de pruebas unitarias (sin Docker/Mongo) sobre la lógica de negocio:
 validadores de dominio, transformación de features del USGS, bucketing de
 magnitud, `top_locations` de reportes y el flujo de deduplicación de ingesta.
-
-## Supuestos
-
-Sin autenticación/autorización, sin frontend, sin despliegue cloud, sin CI/CD
-(según el enunciado de la prueba).
-
-## Pendiente / posibles siguientes pasos
-
-Nivel 2 (Prometheus/Grafana), Nivel 3 (eventos/WebSockets) y Nivel 4
-(analítica/ML) — bonificaciones de la sección 8 de la prueba, no
-implementadas en esta entrega para mantener el foco en los requisitos base.
