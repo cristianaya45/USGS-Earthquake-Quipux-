@@ -83,10 +83,7 @@ services:
       - ./src/airflow/dags:/opt/airflow/dags
       - ./src:/opt/airflow/project_src
     entrypoint: /bin/bash
-    command: >
-      -c "airflow db migrate &&
-          airflow users create --username ${AIRFLOW_ADMIN_USER:-admin} --password ${AIRFLOW_ADMIN_PASSWORD:-admin}
-          --firstname Admin --lastname User --role Admin --email admin@example.com || true"
+    command: -c "airflow db migrate && (airflow users create --username ${AIRFLOW_ADMIN_USER:-admin} --password ${AIRFLOW_ADMIN_PASSWORD:-admin} --firstname Admin --lastname User --role Admin --email admin@example.com || true)"
 
   airflow-webserver:
     build:
